@@ -1,0 +1,117 @@
+---
+title: "Ingressos e Saídas"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    theme: bootstrap
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+
+dados <- readr::read_csv2("data-raw/taxa.csv") |> janitor::clean_names()
+
+
+```
+
+Visão geral
+==============================================================
+
+Row {data-height=150}
+-----------------------------------------------------------------------
+
+### Sobre
+
+Algumas sugestões de gráficos interativos para utilizar no Observatório de Pessoal. 
+
+Os dados estão disponíveis [aqui](https://mtegovbr.sharepoint.com/:x:/r/sites/DESIN-CGINF/_layouts/15/Doc.aspx?sourcedoc=%7B17DA832D-A018-4541-B074-213F4D01D4BB%7D&file=Taxa%20de%20Reposi%C3%A7%C3%A3o.xlsx&action=default&mobileredirect=true).
+
+Caso seja possível incluir os gráficos utilizando o iFrame deste html, poderemos customizar esses gráficos ainda mais. Utilizando mais css, e formanto mais detalhes nesses gráficos.
+
+Segue como sugestão e caso positivo poderemos utilizar como no tesouro transparente. 
+
+Row
+-----------------------------------------------------------------------
+
+### Média de gols por partida
+
+```{r}
+valueBox(
+  10,
+  caption = glue::glue("teste")
+)
+```
+
+### Proporção de vitória dos mandantes
+
+```{r}
+
+valueBox(
+  10,
+  caption = glue::glue("teste")
+)  
+```
+
+### Proporção de vitória dos visitantes
+
+```{r}
+
+valueBox(
+  10,
+  caption = glue::glue("teste")
+) 
+```
+
+
+Row {.tabset}
+-----------------------------------------------------------------------
+
+
+### Utilizando um gráfico plotly 
+
+```{r}
+
+p <- dados |> 
+  dplyr::mutate(reposicao = saidas/ingressos, ano = as.factor(ano)) |> 
+ggplot2::ggplot() +
+ ggplot2::aes(x = ano , y = reposicao) +
+  ggplot2::geom_bar(stat = "identity", fill = "#112446") +
+  ggplot2::theme_minimal()
+
+plotly::ggplotly(p)
+```
+
+
+
+
+### Echarts com seleção 
+
+```{r}
+dados |> 
+  dplyr::mutate(reposicao = saidas/ingressos, ano = as.factor(ano)) |> 
+  echarts4r::e_chart(x = ano) |> 
+  echarts4r::e_step(serie = reposicao) |> 
+  echarts4r::e_bar(serie = saidas) |> 
+  echarts4r::e_bar(serie = ingressos) |> 
+  echarts4r::e_tooltip()
+  
+```
+
+
+### Echarts linha
+
+```{r}
+dados |> 
+  dplyr::mutate(reposicao = saidas/ingressos, ano = as.factor(ano)) |> 
+  echarts4r::e_chart(x = ano) |> 
+  echarts4r::e_line(serie = reposicao) |> 
+  echarts4r::e_tooltip()
+  
+```
+
+
+Página 2
+==============================================================
+
+
