@@ -1,0 +1,44 @@
+---
+title: "Poder Executivo Federal: Taxa de Reposição de Servidores"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: bootstrap
+---
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(scales)
+
+dados <- readr::read_csv2("../data-raw/taxa.csv") |> 
+  janitor::clean_names() |> 
+  dplyr::mutate(reposicao = ingressos/saidas, ano = as.factor(ano)) 
+
+
+```
+
+```{r}
+
+p <- dados |> 
+  ggplot2::ggplot() +
+  ggplot2::aes(x = ano , y = reposicao) +
+  ggplot2::geom_bar(stat = "identity", fill = "#112446") +
+  ggplot2::geom_text(ggplot2::aes(y = reposicao + 0.05, label = scales::percent(reposicao) ), vjust = -0.2,
+                     position = ggplot2::position_dodge(width = 1)) +
+  ggplot2::xlab("")  +
+  ggplot2::ylab("") +
+  ggplot2::scale_y_continuous(labels = scales::percent)+
+  ggplot2::theme_minimal(base_size = 8)
+
+plotly::ggplotly(p)
+
+```
+
+```{r}
+library(tidyverse)
+tab <- readr::read_csv2("../data-raw/tabela.csv")
+knitr::kable(tab )
+```
+

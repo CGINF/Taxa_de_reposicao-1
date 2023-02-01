@@ -1,0 +1,37 @@
+---
+title: "Poder Executivo Federal: Taxa de Reposição de Servidores"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: bootstrap
+---
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(scales)
+
+dados <- readr::read_csv2("../data-raw/Desp_ativos.csv") |> 
+  janitor::clean_names()  |> dplyr::mutate(
+    Ano = as.factor(ano)
+  )
+   
+
+
+```
+
+```{r}
+
+library(echarts4r)
+dados |> 
+  dplyr::mutate( ano = as.factor(ano)) |>
+  echarts4r::e_charts(ano) |> 
+  echarts4r::e_bar(serie = desp_liq) |> 
+  echarts4r::e_line(ativos, y_index = 1) |>  # add secondary axis
+  echarts4r::e_y_axis(formatter = e_axis_formatter("currency")) 
+  
+
+```
+
+
