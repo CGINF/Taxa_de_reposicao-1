@@ -29,7 +29,10 @@ dados |>
   echarts4r::e_charts(ano) |> 
   echarts4r::e_bar(serie = desp_liq) |> 
   echarts4r::e_line(ativos, y_index = 1) |>  # add secondary axis
-  echarts4r::e_y_axis(formatter = e_axis_formatter("currency")) 
+  echarts4r::e_y_axis(formatter = e_axis_formatter("currency")) |> 
+  e_tooltip(trigger = "axis") |>  # tooltip 
+  e_title("US States", "Population & Income") |>  # Add title & subtitle
+  e_theme("infographic") |>  # theme
   
 
 ```
