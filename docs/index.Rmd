@@ -2,8 +2,8 @@
 title: "Taxa de Reposição de Servidores"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
+    orientation: rows
+    vertical_layout: scroll
     theme: bootstrap
 ---
 
@@ -19,7 +19,8 @@ dados <- readr::read_csv2("../data-raw/taxa.csv") |>
 
 ```
 
-
+Row {data-height=200, data-width=350}
+-------------------------------------
 ###
 
 ```{r fig.width=2, fig.height=5}
@@ -46,7 +47,8 @@ plotly::ggplotly(p)
 
 ```
 
-
+Row {data-height=100,  data-width=350}
+-------------------------------------
 ###
 
 ```{r, fig.width=5, fig.height=5 }
