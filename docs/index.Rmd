@@ -12,7 +12,7 @@ output:
 library(flexdashboard)
 library(scales)
 
-dados <- readr::read_csv2("../data-raw/taxa.csv") |> 
+dados <- readr::read_csv2("data-raw/taxa.csv") |> 
   janitor::clean_names() |> 
   dplyr::mutate(reposicao = ingressos/saidas, ano = as.factor(ano)) 
 
@@ -40,6 +40,7 @@ p <- dados |>
   ) +
   ggplot2::xlab("")  +
   ggplot2::ylab("") +
+  ggplot2::ggtitle(label = "Taxa de Reposição de Servidores") +
   ggplot2::scale_y_continuous(labels = scales::percent)+
   ggplot2::theme_minimal(base_size = 8)
 
@@ -47,22 +48,45 @@ plotly::ggplotly(p)
 
 ```
 
-<!-- Row {data-height=100,  data-width=350} -->
-<!-- ------------------------------------- -->
-<!-- ### -->
+Row {data-height=100,  data-width=350}
+-------------------------------------
+###
 
-<!-- ```{r, fig.width=5, fig.height=5 } -->
-<!-- library(gt) -->
-<!-- tab <- readr::read_csv2("../data-raw/tabela.csv") -->
-<!-- tab %>% knitr::kable(label = NA) -->
-<!--   # gt() %>% -->
-<!--   # tab_style( -->
-<!--   #     style = cell_text(size = px(12)), -->
-<!--   #   locations = cells_column_labels() -->
-<!--   # ) |>  -->
-<!--   # tab_style( -->
-<!--   #     style = cell_text(size = px(12)), -->
-<!--   #   locations = cells_body() -->
-<!--   # ) -->
-<!-- ``` -->
+```{r, fig.width=5, fig.height=5 }
+library(echarts4r)
+e1 <- dados |> 
+  e_charts(
+    ano,
+    height = 200,
+    elementId = "chart1" # specify id
+  ) |> 
+  e_bar(ingressos) |> 
+  e_datazoom(show = FALSE) |>  # hide
+  echarts4r::e_theme("auritus" ) |>
+  echarts4r::e_tooltip(trigger = "axis")
+e2 <- dados |> 
+  e_charts(
+    ano,
+    height = 200,
+    elementId = "chart2" # specify id
+  ) |> 
+  e_bar(saidas) |>  
+  e_datazoom(show = FALSE) |> # hide
+  echarts4r::e_theme("auritus" ) |>
+  echarts4r::e_tooltip(trigger = "axis")
+  
+e3 <- dados |> 
+  e_charts(
+    ano,
+    height = 200
+  ) |> 
+  e_line(reposicao) |> 
+  e_y_axis(formatter = e_axis_formatter(style = "percent", digits = 1)) |> 
+  e_datazoom() |>
+  echarts4r::e_theme("auritus" ) |>
+  echarts4r::e_tooltip(trigger = "axis")
+  e_connect(c("chart1", "chart2")) # connect
+  
+e_arrange(e1, e2, e3)
+```
 
