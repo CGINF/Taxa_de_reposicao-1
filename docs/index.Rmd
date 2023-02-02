@@ -47,22 +47,22 @@ plotly::ggplotly(p)
 
 ```
 
-Row {data-height=100,  data-width=350}
--------------------------------------
-###
+<!-- Row {data-height=100,  data-width=350} -->
+<!-- ------------------------------------- -->
+<!-- ### -->
 
-```{r, fig.width=5, fig.height=5 }
-library(gt)
-tab <- readr::read_csv2("../data-raw/tabela.csv")
-tab %>% knitr::kable(label = NA)
-  # gt() %>%
-  # tab_style(
-  #     style = cell_text(size = px(12)),
-  #   locations = cells_column_labels()
-  # ) |> 
-  # tab_style(
-  #     style = cell_text(size = px(12)),
-  #   locations = cells_body()
-  # )
-```
+<!-- ```{r, fig.width=5, fig.height=5 } -->
+<!-- library(gt) -->
+<!-- tab <- readr::read_csv2("../data-raw/tabela.csv") -->
+<!-- tab %>% knitr::kable(label = NA) -->
+<!--   # gt() %>% -->
+<!--   # tab_style( -->
+<!--   #     style = cell_text(size = px(12)), -->
+<!--   #   locations = cells_column_labels() -->
+<!--   # ) |>  -->
+<!--   # tab_style( -->
+<!--   #     style = cell_text(size = px(12)), -->
+<!--   #   locations = cells_body() -->
+<!--   # ) -->
+<!-- ``` -->
 
