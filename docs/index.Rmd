@@ -1,9 +1,9 @@
 ---
-title: "Poder Executivo Federal: Taxa de Reposição de Servidores"
+title: "Taxa de Reposição de Servidores"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
-    vertical_layout: scroll
+    vertical_layout: fill
     theme: bootstrap
 ---
 
@@ -24,7 +24,7 @@ Row {data-height=400, data-width=500}
 
 ###
 
-```{r fig.width=5, fig.height=5}
+```{r fig.width=2, fig.height=5}
 
 p <- dados |> 
   ggplot2::ggplot() +
