@@ -19,14 +19,22 @@ dados <- readr::read_csv2("../data-raw/taxa.csv") |>
 
 ```
 
-```{r}
+Row {data-height=400, data-width=500}
+-------------------------------------
+
+###
+
+```{r fig.width=5, fig.height=5}
 
 p <- dados |> 
   ggplot2::ggplot() +
   ggplot2::aes(x = ano , y = reposicao) +
   ggplot2::geom_bar(stat = "identity", fill = "#112446") +
-  ggplot2::geom_text(ggplot2::aes(y = reposicao + 0.05, label = scales::percent(reposicao) ), vjust = -0.2,
-                     position = ggplot2::position_dodge(width = 1)) +
+  ggplot2::geom_text(
+    ggplot2::aes(y = reposicao + 0.05,label = scales::percent(reposicao) ),
+                     vjust = -0.8,
+                     position = ggplot2::position_dodge(width = 1), size = 3
+    ) +
   ggplot2::xlab("")  +
   ggplot2::ylab("") +
   ggplot2::scale_y_continuous(labels = scales::percent)+
@@ -36,9 +44,24 @@ plotly::ggplotly(p)
 
 ```
 
-```{r}
-library(tidyverse)
+
+Row {data-height=100, data-width=500}
+-------------------------------------
+
+###
+
+```{r, fig.width=5, fig.height=5 }
+library(gt)
 tab <- readr::read_csv2("../data-raw/tabela.csv")
-knitr::kable(tab )
+tab %>% knitr::kable(label = NA)
+  # gt() %>%
+  # tab_style(
+  #     style = cell_text(size = px(12)),
+  #   locations = cells_column_labels()
+  # ) |> 
+  # tab_style(
+  #     style = cell_text(size = px(12)),
+  #   locations = cells_body()
+  # )
 ```
 
