@@ -60,33 +60,37 @@ e1 <- dados |>
     height = 200,
     elementId = "chart1" # specify id
   ) |> 
-  e_bar(ingressos) |> 
-  e_datazoom(show = FALSE) |>  # hide
-  echarts4r::e_theme("auritus" ) |>
-  echarts4r::e_tooltip(trigger = "axis")
-e2 <- dados |> 
-  e_charts(
-    ano,
-    height = 200,
-    elementId = "chart2" # specify id
-  ) |> 
-  e_bar(saidas) |>  
-  e_datazoom(show = FALSE) |> # hide
-  echarts4r::e_theme("auritus" ) |>
-  echarts4r::e_tooltip(trigger = "axis")
+  e_bar(ingressos, name = "Ingressos") |> 
+  e_bar(saidas, name = "Saídas") |>  
+  #e_datazoom(show = FALSE) |>  # hide
+  echarts4r::e_legend(right = 0) |>
   
-e3 <- dados |> 
+  echarts4r::e_theme("auritus" ) |>
+  echarts4r::e_tooltip(trigger = "axis")
+
+  
+e2 <- dados |> 
   e_charts(
     ano,
     height = 200
   ) |> 
   e_line(reposicao) |> 
   e_y_axis(formatter = e_axis_formatter(style = "percent", digits = 1)) |> 
-  e_datazoom() |>
+  #e_datazoom() |>
+  echarts4r::e_title("Taxa de reposição", "Poder Executivo Federal") |>
+  echarts4r::e_legend(right = 0) |>
   echarts4r::e_theme("auritus" ) |>
-  echarts4r::e_tooltip(trigger = "axis")
-  e_connect(c("chart1", "chart2")) # connect
+  echarts4r::e_tooltip(trigger = "axis") 
   
-e_arrange(e1, e2, e3)
+e_arrange(e2, e1)
+```
+
+```{r}
+dados |> 
+  e_charts(ano) |> 
+  e_bar(ingressos, name = "Ingressos") |> 
+  e_bar(saidas, name = "Saídas") |> 
+  e_step(reposicao, name = "Taxa de Reposição") |> 
+  e_title("Poder Executivo Federal") 
 ```
 
