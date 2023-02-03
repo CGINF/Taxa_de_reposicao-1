@@ -14,7 +14,7 @@ library(scales)
 
 dados <- readr::read_csv2("data-raw/taxa.csv") |> 
   janitor::clean_names() |> 
-  dplyr::mutate(Taxa = round((ingressos/saidas)*100, digits =  1), 
+  dplyr::mutate(Taxa = round((ingressos/saidas), digits =  3), 
                 ano = as.factor(ano)) 
 
 
@@ -65,7 +65,7 @@ e1 <- dados |>
   e_bar(saidas, name = "Saídas") |>  
   #e_datazoom(show = FALSE) |>  # hide
   echarts4r::e_legend(right = 0) |>
-  e_y_axis(formatter = e_axis_formatter(style = "decimal")) |>
+  e_y_axis(formatter = e_axis_formatter(style = "decimal", digits = 3)) |>
   echarts4r::e_theme("auritus" ) |>
   echarts4r::e_tooltip(trigger = "axis")
 
@@ -78,14 +78,14 @@ e2 <- dados |>
   e_line(Taxa) |> 
   e_y_axis(formatter = e_axis_formatter(style = "percent", digits = 0)) |> 
   #e_datazoom() |>
-  echarts4r::e_title("Taxa de reposição", "Poder Executivo Federal") |>
+  echarts4r::e_title("Taxa de Reposição", "Poder Executivo Federal") |>
   echarts4r::e_legend(right = 0) |>
   echarts4r::e_theme("auritus" ) |>
   echarts4r::e_tooltip(
     formatter = htmlwidgets::JS("function(params){
                                 return(
                                 'Ano: ' + params.value[0] + 
-                                '<br />'+params.value[1]*100 '%')}")
+                                '<br />Taxa: '+params.value[1]*100 + '%')}")
     ) 
   
 e_arrange(e2, e1)
