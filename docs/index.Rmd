@@ -72,7 +72,7 @@ e1 <- dados |>
 e2 <- dados |> 
   e_charts(
     ano,
-    height = 200
+    height = 180
   ) |> 
   e_line(reposicao) |> 
   e_y_axis(formatter = e_axis_formatter(style = "percent", digits = 1)) |> 
