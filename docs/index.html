@@ -292,20 +292,18 @@
       document.body.style.height = "100%";
       document.documentElement.style.width = "100%";
       document.documentElement.style.height = "100%";
-      if (cel) {
-        cel.style.position = "absolute";
-        var pad = unpackPadding(sizing.padding);
-        cel.style.top = pad.top + "px";
-        cel.style.right = pad.right + "px";
-        cel.style.bottom = pad.bottom + "px";
-        cel.style.left = pad.left + "px";
-        el.style.width = "100%";
-        el.style.height = "100%";
-      }
+      cel.style.position = "absolute";
+      var pad = unpackPadding(sizing.padding);
+      cel.style.top = pad.top + "px";
+      cel.style.right = pad.right + "px";
+      cel.style.bottom = pad.bottom + "px";
+      cel.style.left = pad.left + "px";
+      el.style.width = "100%";
+      el.style.height = "100%";
 
       return {
-        getWidth: function() { return cel.offsetWidth; },
-        getHeight: function() { return cel.offsetHeight; }
+        getWidth: function() { return cel.getBoundingClientRect().width; },
+        getHeight: function() { return cel.getBoundingClientRect().height; }
       };
 
     } else {
@@ -313,8 +311,8 @@
       el.style.height = px(sizing.height);
 
       return {
-        getWidth: function() { return el.offsetWidth; },
-        getHeight: function() { return el.offsetHeight; }
+        getWidth: function() { return cel.getBoundingClientRect().width; },
+        getHeight: function() { return cel.getBoundingClientRect().height; }
       };
     }
   }
@@ -538,8 +536,8 @@
 
           elementData(el, "initialized", true);
           if (bindingDef.initialize) {
-            var result = bindingDef.initialize(el, el.offsetWidth,
-              el.offsetHeight);
+            var rect = el.getBoundingClientRect();
+            var result = bindingDef.initialize(el, rect.width, rect.height);
             elementData(el, "init_result", result);
           }
         }
@@ -581,29 +579,30 @@
       forEach(matches, function(el) {
         var sizeObj = initSizing(el, binding);
 
+        var getSize = function(el) {
+          if (sizeObj) {
+            return {w: sizeObj.getWidth(), h: sizeObj.getHeight()}
+          } else {
+            var rect = el.getBoundingClientRect();
+            return {w: rect.width, h: rect.height}
+          }
+        };
+
         if (hasClass(el, "html-widget-static-bound"))
           return;
         el.className = el.className + " html-widget-static-bound";
 
         var initResult;
         if (binding.initialize) {
-          initResult = binding.initialize(el,
-            sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-            sizeObj ? sizeObj.getHeight() : el.offsetHeight
-          );
+          var size = getSize(el);
+          initResult = binding.initialize(el, size.w, size.h);
           elementData(el, "init_result", initResult);
         }
 
         if (binding.resize) {
-          var lastSize = {
-            w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-            h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
-          };
+          var lastSize = getSize(el);
           var resizeHandler = function(e) {
-            var size = {
-              w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-              h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
-            };
+            var size = getSize(el);
             if (size.w === 0 && size.h === 0)
               return;
             if (size.w === lastSize.w && size.h === lastSize.h)
@@ -905,7 +904,6 @@
     return result;
   }
 })();
-
 </script>
 <script>
 /*
@@ -1457,14 +1455,14 @@ if (HTMLWidgets.shinyMode) {
   <h3></h3>
   <div class="row">
     <div class="col-12">
-      <div id="htmlwidget-b2325d8511199b484e8b" style="width:100%;height:200px;" class="echarts4r html-widget"></div>
-      <script type="application/json" data-for="htmlwidget-b2325d8511199b484e8b">{"x":{"theme":"custom","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true,"axisLabel":{"formatter":"function(value, index) {\n        var fmt = new Intl.NumberFormat('en', {\"style\":\"percent\",\"minimumFractionDigits\":0,\"maximumFractionDigits\":0,\"currency\":\"USD\"});\n        return fmt.format(value);\n    }"}}],"xAxis":[{"data":["2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022"],"type":"category","boundaryGap":true}],"legend":{"data":["Taxa"],"show":true,"type":"plain","right":0},"series":[{"data":[{"value":["2012","1.052"]},{"value":["2013","1.290"]},{"value":["2014","1.586"]},{"value":["2015","0.935"]},{"value":["2016","0.991"]},{"value":["2017","0.675"]},{"value":["2018","0.579"]},{"value":["2019","0.319"]},{"value":["2020","0.382"]},{"value":["2021","0.351"]},{"value":["2022","0.780"]}],"yAxisIndex":0,"xAxisIndex":0,"name":"Taxa","type":"line","coordinateSystem":"cartesian2d"}],"title":[{"text":"Taxa de Reposição","subtext":"Poder Executivo Federal"}],"tooltip":{"trigger":"item","formatter":"function(params){\n                                return(\n                                'Ano: ' + params.value[0] + \n                                '<br />Taxa: '+params.value[1]*100 + '%')}"}},"dispose":true,"theme2":true,"customTheme":"{\"color\":[\"#004580\",\"#ef0219\"]}","theme_name":"custom"},"evals":["opts.yAxis.0.axisLabel.formatter","opts.tooltip.formatter"],"jsHooks":[]}</script>
+      <div id="htmlwidget-a9727a6032a7c1ec4041" style="width:100%;height:400px;" class="echarts4r html-widget "></div>
+      <script type="application/json" data-for="htmlwidget-a9727a6032a7c1ec4041">{"x":{"theme":"custom","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true,"axisLabel":{"formatter":"function(value, index) {\n        var fmt = new Intl.NumberFormat('en', {\"style\":\"percent\",\"minimumFractionDigits\":0,\"maximumFractionDigits\":0,\"currency\":\"USD\"});\n        return fmt.format(value);\n    }"}}],"xAxis":[{"data":["2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022"],"type":"category","boundaryGap":true}],"legend":{"data":["Taxa"],"show":true,"type":"plain","right":0},"series":[{"data":[{"value":["2012","1.05"]},{"value":["2013","1.29"]},{"value":["2014","1.59"]},{"value":["2015","0.93"]},{"value":["2016","0.99"]},{"value":["2017","0.68"]},{"value":["2018","0.58"]},{"value":["2019","0.32"]},{"value":["2020","0.38"]},{"value":["2021","0.35"]},{"value":["2022","0.78"]}],"yAxisIndex":0,"xAxisIndex":0,"name":"Taxa","type":"line","coordinateSystem":"cartesian2d"}],"title":[{"text":"Taxa de Reposição","subtext":"Poder Executivo Federal"}],"tooltip":{"trigger":"item","formatter":"function(params){\n                                return(\n                                'Ano: ' + params.value[0] + \n                                '<br />Taxa: '+params.value[1]*100 + '%')}"}},"dispose":true,"theme2":true,"customTheme":"{\"color\":[\"#004580\",\"#ef0219\"]}","theme_name":"custom"},"evals":["opts.yAxis.0.axisLabel.formatter","opts.tooltip.formatter"],"jsHooks":[]}</script>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
-      <div id="chart1" style="width:100%;height:180px;" class="echarts4r html-widget"></div>
-      <script type="application/json" data-for="chart1">{"x":{"theme":"custom","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true,"axisLabel":{"formatter":"function(value, index) {\n        var fmt = new Intl.NumberFormat('en', {\"style\":\"decimal\",\"minimumFractionDigits\":3,\"maximumFractionDigits\":3,\"currency\":\"USD\"});\n        return fmt.format(value);\n    }"}}],"xAxis":[{"data":["2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022"],"type":"category","boundaryGap":true}],"legend":{"data":["Ingressos","Saídas"],"show":true,"type":"plain","right":0},"series":[{"data":[{"value":["2012","24.026"]},{"value":["2013","31.115"]},{"value":["2014","40.021"]},{"value":["2015","21.797"]},{"value":["2016","20.794"]},{"value":["2017","18.431"]},{"value":["2018","13.381"]},{"value":["2019","13.426"]},{"value":["2020"," 6.528"]},{"value":["2021"," 5.067"]},{"value":["2022","11.626"]}],"name":"Ingressos","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d"},{"data":[{"value":["2012","22.835"]},{"value":["2013","24.114"]},{"value":["2014","25.228"]},{"value":["2015","23.316"]},{"value":["2016","20.986"]},{"value":["2017","27.299"]},{"value":["2018","23.117"]},{"value":["2019","42.126"]},{"value":["2020","17.098"]},{"value":["2021","14.419"]},{"value":["2022","14.913"]}],"name":"Saídas","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d"}],"tooltip":{"trigger":"axis"}},"dispose":true,"theme2":true,"customTheme":"{\"color\":[\"#004580\",\"#ef0219\"]}","theme_name":"custom"},"evals":["opts.yAxis.0.axisLabel.formatter"],"jsHooks":[]}</script>
+      <div id="chart1" style="width:100%;height:400px;" class="echarts4r html-widget "></div>
+      <script type="application/json" data-for="chart1">{"x":{"theme":"custom","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true,"axisLabel":{"formatter":"function(value, index) {\n        var fmt = new Intl.NumberFormat('en', {\"style\":\"decimal\",\"minimumFractionDigits\":3,\"maximumFractionDigits\":3,\"currency\":\"USD\"});\n        return fmt.format(value);\n    }"}}],"xAxis":[{"data":["2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022"],"type":"category","boundaryGap":true}],"legend":{"data":["Ingressos","Saídas"],"show":true,"type":"plain","right":0},"series":[{"data":[{"value":["2012","24.026"]},{"value":["2013","31.115"]},{"value":["2014","40.021"]},{"value":["2015","21.797"]},{"value":["2016","20.794"]},{"value":["2017","18.431"]},{"value":["2018","13.381"]},{"value":["2019","13.426"]},{"value":["2020"," 6.528"]},{"value":["2021"," 5.067"]},{"value":["2022","11.626"]}],"name":"Ingressos","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d","stack":"grp"},{"data":[{"value":["2012","-22.835"]},{"value":["2013","-24.114"]},{"value":["2014","-25.228"]},{"value":["2015","-23.316"]},{"value":["2016","-20.986"]},{"value":["2017","-27.299"]},{"value":["2018","-23.117"]},{"value":["2019","-42.126"]},{"value":["2020","-17.098"]},{"value":["2021","-14.419"]},{"value":["2022","-14.913"]}],"name":"Saídas","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d","stack":"grp"}],"tooltip":{"trigger":"axis"}},"dispose":true,"theme2":true,"customTheme":"{\"color\":[\"#004580\",\"#ef0219\"]}","theme_name":"custom"},"evals":["opts.yAxis.0.axisLabel.formatter"],"jsHooks":[]}</script>
     </div>
   </div>
 </div>

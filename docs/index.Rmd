@@ -12,10 +12,11 @@ output:
 library(flexdashboard)
 library(scales)
 
-dados <- readr::read_csv2("data-raw/taxa.csv") |> 
+dados <- readr::read_csv2("~/Trabalho/CGINF/Projetos_R/Taxa_de_reposicao/data-raw/taxa.csv") |> 
   janitor::clean_names() |> 
-  dplyr::mutate(Taxa = round((ingressos/saidas), digits =  3), 
-                ano = as.factor(ano)) 
+  dplyr::mutate(Taxa = round((ingressos/saidas), digits =  2), 
+                ano = as.factor(ano),
+                saidas = saidas * -1) 
 
 
 ```
@@ -58,7 +59,7 @@ library(echarts4r)
 e1 <- dados |> 
   e_charts(
     ano,
-    height = 180,
+    height = 400,
     elementId = "chart1" # specify id
   ) |> 
   e_bar(ingressos, name = "Ingressos") |> 
@@ -66,28 +67,28 @@ e1 <- dados |>
   #e_datazoom(show = FALSE) |>  # hide
   echarts4r::e_legend(right = 0) |>
   e_y_axis(formatter = e_axis_formatter(style = "decimal", digits = 3)) |>
-  echarts4r::e_theme("auritus" ) |>
+  echarts4r::e_theme_custom('{"color":["#004580","#ef0219"]}') |>  # theme
   echarts4r::e_tooltip(trigger = "axis")
 
   
 e2 <- dados |> 
   e_charts(
     ano,
-    height = 200
+    height = 400
   ) |> 
   e_line(Taxa) |> 
   e_y_axis(formatter = e_axis_formatter(style = "percent", digits = 0)) |> 
   #e_datazoom() |>
   echarts4r::e_title("Taxa de Reposição", "Poder Executivo Federal") |>
   echarts4r::e_legend(right = 0) |>
-  echarts4r::e_theme("auritus" ) |>
+  echarts4r::e_theme_custom('{"color":["#004580","#ef0219"]}') |>  # theme
   echarts4r::e_tooltip(
     formatter = htmlwidgets::JS("function(params){
                                 return(
                                 'Ano: ' + params.value[0] + 
                                 '<br />Taxa: '+params.value[1]*100 + '%')}")
     ) 
-  
+  #e_locale("PT-br") |>
 e_arrange(e2, e1)
 ```
 
@@ -98,5 +99,20 @@ dados |>
   e_bar(saidas, name = "Saídas") |> 
   e_step(Taxa, name = "Taxa de Reposição") |> 
   e_title("Poder Executivo Federal") 
+```
+
+```{r}
+
+tidyr::pivot_wider(dados,names_from = ano, values_from = c(ingressos, saidas, reposicao, Taxa)) |> View()
+
+```
+
+```{r}
+longer <- tidyr::pivot_longer(dados, cols = c(ingressos, saidas,  Taxa), values_to = "valor") |> dplyr::select(ano, name, valor)
+```
+
+
+```{r}
+wider <- longer |> tidyr::pivot_wider(names_from = ano, values_from = valor)
 ```
 
